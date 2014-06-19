@@ -1,4 +1,4 @@
-# require 'hash'
+require 'tasklist_representer'
 require 'user_representer'
 
 class SnapshortsController < ApplicationController
@@ -13,13 +13,19 @@ class SnapshortsController < ApplicationController
     end
 
     def daily
-        render layout: false
 
         @archievement = {}
         @schedule     = {}
         @assign_to_me = {}
         @assign_by_me = {}
         @my_todo      = {}
+
+        @result.aggregations.Assignee.buckets.each do |bucket|
+            @archievement = bucket.Month2Date
+            @schedule     = bucket.ComingTasksDue.Range
+        end
+
+        render layout: false
     end
 
     private
@@ -31,9 +37,26 @@ class SnapshortsController < ApplicationController
 
         def fetch_user
             connect
-            index    = params[:index].present? && !params[:index].blank? ? params[:index] : 'tw_testing'
+            index    = params[:index].present? && !params[:index].blank? ? params[:index] : 'tw_dev'
             type     = params[:type].present? && !params[:type].blank? ? params[:type] : 'memberlist'
-            response = @client.search index: index, type: type, body: { size: 10 }
+            response = @client.search index: index, type: type, id: 57, body: {
+                size: 1,
+                query: {
+                    filtered: {
+                        filter: {
+                            bool: {
+                                should: [
+                                    {
+                                        term: {
+                                            id: "57"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
             @users   = Hashie::Mash.new response
         end
 
@@ -44,8 +67,8 @@ class SnapshortsController < ApplicationController
             type   = params[:type].present? && !params[:type].blank? ? params[:type] : 'tasklist'
 
 
-            if params[:id].present? && !params[:id].blank?
-                response = @client.search index: index, type: type, id: params[:id], body: {
+            if params[:user_id].present? && !params[:user_id].blank?
+                response = @client.search index: index, type: type, id: params[:user_id], body: {
                     size: 1,
                     aggs: {
                         Assignee: {

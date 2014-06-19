@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	
+
 	<title>Taskworld:</title>
 	</head>
 	<body>
@@ -17,7 +17,7 @@
 								<td valign="top" ><img src="http://static.taskworld.com/images/taskworld-email-head02.gif" alt="Taskworld" title="Taskworld" width="123" height="74" style="display: block;"/></td>
 								<td valign="top" ><img src="http://static.taskworld.com/images/taskworld-email-head03.gif" alt="Taskworld" title="Taskworld" width="123" height="74" style="display: block;"/></td>
 								<td valign="top" ><img src="http://static.taskworld.com/images/taskworld-email-head04.gif" alt="Taskworld" title="Taskworld" width="123" height="74" style="display: block;"/></td>
-								<td valign="top" ><img src="http://static.taskworld.com/images/taskworld-email-head05.gif" alt="Taskworld" title="Taskworld" width="128" height="74" style="display: block;"/></td>								
+								<td valign="top" ><img src="http://static.taskworld.com/images/taskworld-email-head05.gif" alt="Taskworld" title="Taskworld" width="128" height="74" style="display: block;"/></td>
 							</tr>
 						</table>
 					</td>
@@ -37,7 +37,7 @@
 					</tr>
 				<% end %>
 				<!-- -->
-				
+
 				<!-- -->
 				<% if @schedule.present? && !@schedule.blank? %>
 					<tr>
@@ -48,7 +48,7 @@
 					</tr>
 				<% end %>
 				<!-- -->
-				
+
 				<!-- -->
 				<tr>
 					<td>
@@ -75,31 +75,31 @@
 				<% if @assign_to_me.present? && !@assign_to_me.blank? %>
 					<tr>
 						<td style="background-color: #eff2f4; padding: 0 25px 5px;">
-							
+
 							<!-- ASSIGN TO ME -->
 							<%= render 'assign_to_me', locals: { assign_to_me: @assign_to_me } %>
 						</td>
 					</tr>
 				<% end %>
 				<!-- -->
-		
+
 				<!-- -->
 				<% if @assign_by_me.present? && !@assign_to_me.blank? %>
 					<tr>
 						<td style="background-color: #f0f3f4; padding: 0 25px 5px;">
-							
+
 							<!-- ASSIGN BY ME -->
 							<%= render 'assign_by_me', locals: { assign_by_me: @assign_by_me } %>
 						</td>
 					</tr>
 				<% end %>
 				<!-- -->
-				
+
 				<!-- -->
 				<% if @my_todo.present? && !@my_todo.blank? %>
 					<tr>
 						<td style="background-color: #f0f3f4; padding: 0 25px 5px;">
-							
+
 							<!-- MY TODO -->
 							<%= render 'my_todo', locals: { my_todo: @my_todo } %>
 						</td>
@@ -117,8 +117,8 @@
 					</td>
 				</tr>
 				<!-- -->
-			
-			
+
+
 				<tr>
 					<td valign="top" style="font-size:13px; font-family:Tahoma;color:#3d4955; padding:0 0 0 25px; line-height:16px;"><br /><br /><br /><br />
 						Happy Tasking,

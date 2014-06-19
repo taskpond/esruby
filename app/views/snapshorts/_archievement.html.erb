@@ -31,7 +31,7 @@
 			<table cellpadding="0" cellspacing="0" border="0" width="200" align="right" style="font-size: 12px; font-family: helvetica; color:#3d4955;">
 				<tr>
 					<td>On-time</td>
-					<td align="right">5,000</td>
+					<td align="right"><%= @archievement.HavingDueDate.doc_count %></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border-top:1px solid #ccd7df;">&nbsp;</td>
@@ -45,7 +45,7 @@
 				</tr>
 				<tr>
 					<td>No Target Date</td>
-					<td align="right">15,000</td>
+					<td align="right"><%= @archievement.NoDueDate.doc_count %></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border-top:1px solid #ccd7df;">&nbsp;</td>

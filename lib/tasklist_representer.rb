@@ -39,4 +39,28 @@ module TasklistRepresenter
             end
         end
     end
+
+    property :aggregations do
+        property :Assignee do
+            collection :buckets do
+                property :key, as: :userId
+                property :doc_count
+                property :Month2Date do
+                    property :doc_count
+                    property :HavingDueDate do
+                        property :doc_count
+                        property :OnTime do
+                            collection :buckets
+                        end
+                    end
+                end
+                property :ComingTasksDue do
+                    property :doc_count
+                    property :Range do
+                        collection :buckets
+                    end
+                end
+            end
+        end
+    end
 end
