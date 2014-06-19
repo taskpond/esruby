@@ -1,0 +1,2 @@
+module SnapshortsHelper
+end

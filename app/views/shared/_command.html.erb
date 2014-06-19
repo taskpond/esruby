@@ -1,0 +1,16 @@
+<textarea class="command"></textarea>
+<button type="button" class="btn btn-default btn-lg btn-block fetch_query">Submit</button>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.fetch_query').on('click', function(e){
+			e.preventDefault();
+			var url = "<%=elasticsearch_fetch_url%>";
+			var command = $('.command').val().replace(/(\r\n|\n|\r)/gm,"").replace(/\:/gm, '=>');
+			console.log(command);
+			$.post(url, {command: command}, function(result){
+				console.log(result);
+			}, 'json');
+		})
+	});
+</script>

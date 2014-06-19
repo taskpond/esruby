@@ -1,0 +1,25 @@
+<h1>Snapshorts#index</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.hits.hits.each do |user| %>
+      <% next unless user._source.userId %>
+      <tr>
+        <td><%= user._source.userId %></td>
+        <td><%= user._source.firstName %></td>
+        <td><%= user._source.lastName %></td>
+        <td><%= user._source.email %></td>
+        <td><%= link_to "Daily Snapshort", snapshort_path(user._source.userId), class: 'btn btn-success' %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
