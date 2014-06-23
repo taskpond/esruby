@@ -1,5 +1,6 @@
-
+set :environment, 'development'
+# set :whenever_environment, defer { stage }
 
 every 1.minutes do
-    rake 'app:send_daily_snapshort'
+    rake 'task:notifier:daily_snapshort'
 end
