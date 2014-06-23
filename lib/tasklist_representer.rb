@@ -53,6 +53,21 @@ module TasklistRepresenter
                             collection :buckets
                         end
                     end
+                    property :NoDueDate do
+                        property :doc_count
+                    end
+                    property :TaskStatus do
+                        property :doc_count
+                        collection :Closed do
+                            property :doc_count
+                        end
+                    end
+                    property :HavingScore do
+                        property :doc_count
+                        collection :Star do
+                            property :value
+                        end
+                    end
                 end
                 property :ComingTasksDue do
                     property :doc_count

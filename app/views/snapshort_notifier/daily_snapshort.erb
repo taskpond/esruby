@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    <title>Taskworld:</title>
+    </head>
+    <body>
+        <br />
+            <table width="670" cellpadding="0" cellspacing="0" align="center" border="0" style="font-size:13px; font-family:Tahoma;color:#3d4955; line-height:16px;" background="lime">
+                <tbody>
+                <tr><td>&nbsp;</td></tr>
+                <tr>
+                    <td style="padding:0 0 0 25px;">
+                        <table cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td valign="top" ><img src="http://static.taskworld.com/images/taskworld-email-head01.gif" alt="Taskworld" title="Taskworld" width="123" height="74" style="display: block;" /></td>
+                                <td valign="top" ><img src="http://static.taskworld.com/images/taskworld-email-head02.gif" alt="Taskworld" title="Taskworld" width="123" height="74" style="display: block;"/></td>
+                                <td valign="top" ><img src="http://static.taskworld.com/images/taskworld-email-head03.gif" alt="Taskworld" title="Taskworld" width="123" height="74" style="display: block;"/></td>
+                                <td valign="top" ><img src="http://static.taskworld.com/images/taskworld-email-head04.gif" alt="Taskworld" title="Taskworld" width="123" height="74" style="display: block;"/></td>
+                                <td valign="top" ><img src="http://static.taskworld.com/images/taskworld-email-head05.gif" alt="Taskworld" title="Taskworld" width="128" height="74" style="display: block;"/></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- -->
+                <tr>
+                    <td>
+                        <h1 style="font-size: 18px; font-family: helvetica; color:#3cbaeb; margin: 30px 0 0 25px; font-weight: normal;"><b>Daily Snapshot</b></h1>
+                    </td>
+                </tr>
+                <% if @archievement.present? && !@archievement.blank? %>
+                    <tr>
+                        <td style="padding:0 0 0 25px;">
+                            <!-- ARCHIEVEMENT -->
+                            <%= render 'snapshorts/archievement', locals: { archievement: @archievement } %>
+                        </td>
+                    </tr>
+                <% end %>
+                <!-- -->
+
+                <!-- -->
+                <% if @schedule.present? && !@schedule.blank? %>
+                    <tr>
+                        <td><br />
+                            <!-- SCHEDULE -->
+                            <%= render 'snapshorts/schedule', locals: { schedule: @schedule } %>
+                        <br /></td>
+                    </tr>
+                <% end %>
+                <!-- -->
+
+                <!-- -->
+                <tr>
+                    <td>
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <tr>
+                                <td  style="border-bottom: 1px solid #ccd7df; background-color: #ffffff; font-size:1; line-height:1px;">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="background-color:#eff2f4;"><br /></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- -->
+                <tr>
+                    <td style="background-color: #eff2f4; padding: 0 25px 5px;">
+                        <h2 style="font-size: 14px; font-family: helvetica; color:#3d4955; font-weight: normal;"><b>View your tasks due today</b></h2>
+                        <p style="font-size:12px; font-family:Tahoma;color:#3d4955;">
+                            You can customize your selection in <a href="#" style="color:#17a3ce;">Notification Settings</a>.
+                        </p>
+                    </td>
+                </tr>
+                <!-- -->
+                <% if @assign_to_me.present? && !@assign_to_me.blank? %>
+                    <tr>
+                        <td style="background-color: #eff2f4; padding: 0 25px 5px;">
+
+                            <!-- ASSIGN TO ME -->
+                            <%= render 'snapshorts/assign_to_me', locals: { assign_to_me: @assign_to_me } %>
+                        </td>
+                    </tr>
+                <% end %>
+                <!-- -->
+
+                <!-- -->
+                <% if @assign_by_me.present? && !@assign_to_me.blank? %>
+                    <tr>
+                        <td style="background-color: #f0f3f4; padding: 0 25px 5px;">
+
+                            <!-- ASSIGN BY ME -->
+                            <%= render 'snapshorts/assign_by_me', locals: { assign_by_me: @assign_by_me } %>
+                        </td>
+                    </tr>
+                <% end %>
+                <!-- -->
+
+                <!-- -->
+                <% if @my_todo.present? && !@my_todo.blank? %>
+                    <tr>
+                        <td style="background-color: #f0f3f4; padding: 0 25px 5px;">
+
+                            <!-- MY TODO -->
+                            <%= render 'snapshorts/my_todo', locals: { my_todo: @my_todo } %>
+                        </td>
+                    </tr>
+                <% end %>
+                <!-- -->
+                <!-- -->
+                <tr>
+                    <td>
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <tr>
+                                <td style="border-top: 1px solid #e8ebec; background-color: #ffffff; font-size:1; line-height:1px;">&nbsp;</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- -->
+
+
+                <tr>
+                    <td valign="top" style="font-size:13px; font-family:Tahoma;color:#3d4955; padding:0 0 0 25px; line-height:16px;"><br /><br /><br /><br />
+                        Happy Tasking,
+                        <p>
+                            <b>The Taskworld Team</b><br />
+                            Improving how the world collaborates - one task at a time
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:0 0 0 25px;"><br />
+                        <p style="font-size:11px; font-family:Tahoma;color:#3d4955;">
+                            This message was sent from a notification only email address that does not accept incoming email.<br/>
+                            Please do not reply to this email. If you have any questions, please <a href="#" style="color:#17a3ce;">Contact Us</a>.
+                        </p>
+                        <p style="font-size:11px; font-family:Tahoma;color:#3d4955;">
+                            Disable email notifications in <a href="#" style="color:#17a3ce;">Notification Settings</a>.
+                        </p>
+                        <p style="font-size:11px; font-family:Tahoma;color:#3d4955;">
+                            Taskworld Inc.<br /> 12 West 37 th Street – Suite 502 New York, NY 10018 United States of America
+                        </p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+    </body>
+</html>

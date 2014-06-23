@@ -25,6 +25,8 @@ class SnapshortsController < ApplicationController
             @schedule     = bucket.ComingTasksDue.Range
         end
 
+        SnapshortNotifier.daily_snapshort('user@example.com', 'Daily Snapshort', @result).deliver
+
         render layout: false
     end
 
@@ -37,22 +39,15 @@ class SnapshortsController < ApplicationController
 
         def fetch_user
             connect
-            index    = params[:index].present? && !params[:index].blank? ? params[:index] : 'tw_dev'
+            index    = params[:index].present? && !params[:index].blank? ? params[:index] : 'tw_testing'
             type     = params[:type].present? && !params[:type].blank? ? params[:type] : 'memberlist'
             response = @client.search index: index, type: type, id: 57, body: {
-                size: 1,
-                query: {
-                    filtered: {
-                        filter: {
-                            bool: {
-                                should: [
-                                    {
-                                        term: {
-                                            id: "57"
-                                        }
-                                    }
-                                ]
-                            }
+                size: 0,
+                aggs: {
+                    Assignee: {
+                        terms: {
+                            field: "assigneeId",
+                            size: 10
                         }
                     }
                 }
@@ -62,19 +57,32 @@ class SnapshortsController < ApplicationController
 
         def fetch_data
             connect
-
             index  = params[:index].present? && !params[:index].blank? ? params[:index] : 'tw_testing'
             type   = params[:type].present? && !params[:type].blank? ? params[:type] : 'tasklist'
 
-
-            if params[:user_id].present? && !params[:user_id].blank?
-                response = @client.search index: index, type: type, id: params[:user_id], body: {
-                    size: 1,
+            if params[:user_id].present? && !params[:user_id].to_i.eql?(0) && !params[:user_id].blank?
+                response = @client.search index: index, type: type, body: {
+                    size: 0,
+                    query: {
+                        filtered: {
+                            filter: {
+                                bool: {
+                                    should: [
+                                        {
+                                            term: {
+                                                assigneeId: params[:user_id]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
                     aggs: {
                         Assignee: {
                             terms: {
                                 field: "assigneeId",
-                                size: 1
+                                size: 10
                             },
                             aggs: {
                                 Month2Date: {
@@ -150,9 +158,31 @@ class SnapshortsController < ApplicationController
                                             }
                                         },
                                         TaskStatus: {
-                                            terms: {
-                                                field: "taskStatus",
-                                                size: 0
+                                            filter: {
+                                                bool: {
+                                                    must: [
+                                                        {
+                                                            exists: {
+                                                                field: "taskStatus"
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            aggs: {
+                                                Closed: {
+                                                    filter: {
+                                                        bool: {
+                                                            must: [
+                                                                {
+                                                                    term: {
+                                                                        taskStatus: "close"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }

@@ -65,3 +65,5 @@ gem 'twitter-bootswatch-rails', :github => 'scottvrosenthal/twitter-bootswatch-r
 gem 'representable'
 
 gem 'hashie'
+
+gem 'whenever'
