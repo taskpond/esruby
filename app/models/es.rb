@@ -8,6 +8,8 @@ class Es < OpenStruct
     MEMBERLIST = 'memberlist'
     DUMMYUSER  = 537
 
+
+
     def initialize
         @client = Elasticsearch::Client.new url: 'http://172.18.1.21:9200'
         @client.transport.reload_connections!
@@ -25,7 +27,7 @@ class Es < OpenStruct
 
         @result.aggregations.Assignee.buckets.each do |bucket|
             @archievement = bucket.Month2Date
-            @schedule     = bucket.ComingTasksDue.Range
+            # @schedule     = bucket.ComingTasksDue.Range
         end
 
         SnapshortNotifier.daily_snapshort('user@example.com', 'Daily Snapshort', @result).deliver
@@ -73,134 +75,130 @@ class Es < OpenStruct
                         },
                         aggs: {
                             Month2Date: {
-                                filter: {
-                                    bool: {
-                                        must: [{
-                                            exists: {
-                                                field: "completedDate"
-                                            }
-                                        }, {
-                                            range: {
-                                                completedDate: {
-                                                    from: "2014-06-01T00:00+0700"
-                                                }
-                                            }
-                                        }]
+                              filter: {
+                                bool: {
+                                  must: [
+                                    {
+                                      exists: {
+                                        field: "completedDate"
+                                      }
+                                    },
+                                    {
+                                      range: {
+                                        completedDate: {
+                                          to: "now/d"
+                                        }
+                                      }
                                     }
-                                },
-                                aggs: {
-                                    HavingScore: {
-                                        filter: {
-                                            bool: {
-                                                must_not: [{
-                                                    term: {
-                                                        satisfiedScore: 0
-                                                    }
-                                                }]
-                                            }
-                                        },
-                                        aggs: {
-                                            Star: {
-                                                avg: {
-                                                    field: "satisfiedScore"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    HavingDueDate: {
-                                        filter: {
-                                            bool: {
-                                                must: [{
-                                                    exists: {
-                                                        field: "estimatedDueDate"
-                                                    }
-                                                }]
-                                            }
-                                        },
-                                        aggs: {
-                                            OnTime: {
-                                                terms: {
-                                                    field: "isFinishedOnTime",
-                                                    size: 0
-                                                }
-                                            }
-                                        }
-                                    },
-                                    NoDueDate: {
-                                        filter: {
-                                            bool: {
-                                                must: [{
-                                                    missing: {
-                                                        field: "estimatedDueDate"
-                                                    }
-                                                }]
-                                            }
-                                        },
-                                        aggs: {
-                                            Count: {
-                                                value_count: {
-                                                    field: "estimatedDueDate"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    TaskStatus: {
-                                        filter: {
-                                            bool: {
-                                                must: [
-                                                    {
-                                                        exists: {
-                                                            field: "taskStatus"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        },
-                                        aggs: {
-                                            Closed: {
-                                                filter: {
-                                                    bool: {
-                                                        must: [
-                                                            {
-                                                                term: {
-                                                                    taskStatus: "close"
-                                                                }
-                                                            }
-                                                        ]
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                  ]
                                 }
-                            },
-                            ComingTasksDue: {
-                                filter: {
+                              },
+                              aggs: {
+                                HavingDueDate: {
+                                  filter: {
                                     bool: {
-                                        must: [{
-                                            exists: {
-                                                field: "estimatedDueDate"
-                                            }
-                                        }]
-                                    }
-                                },
-                                aggs: {
-                                    Range: {
-                                        date_range: {
-                                            field: "estimatedDueDate",
-                                            format: "date_time",
-                                            ranges: [{
-                                                from: "2014-06-01T00:00+0700",
-                                                to: "2014-06-01T00:00+0700||+1d-1s"
-                                            }, {
-                                                from: "2014-06-01T00:00+0700||+2d",
-                                                to: "2014-06-01T00:00+0700||+2d-1s"
-                                            }]
+                                      must: [
+                                        {
+                                          exists: {
+                                            field: "isFinishedOnTime"
+                                          }
                                         }
+                                      ]
                                     }
+                                  },
+                                  aggs: {
+                                    OnTime: {
+                                      filter: {
+                                        bool: {
+                                          must: [
+                                            {
+                                              term: {
+                                                isFinishedOnTime: "true"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    },
+                                    OverDue: {
+                                      filter: {
+                                        bool: {
+                                          must: [
+                                            {
+                                              term: {
+                                                isFinishedOnTime: "false"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  }
+                                },
+                                HavingScore: {
+                                  filter: {
+                                    bool: {
+                                      must: [
+                                        {
+                                          term: {
+                                            field: "satisfiedScore"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  aggs: {
+                                    StarRate: {
+                                      avg: {
+                                        field: "satisfiedScore"
+                                      }
+                                    }
+                                  }
+                                },
+                                NoTargetDate: {
+                                  filter: {
+                                    bool: {
+                                      must: [
+                                        {
+                                          missing: {
+                                            field: "estimatedDueDate"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                },
+                                TaskStatus: {
+                                  filter: {
+                                    bool: {
+                                      must: [
+                                        {
+                                          exists: {
+                                            field: "taskStatus"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  aggs: {
+                                    Closed: {
+                                      filter: {
+                                        bool: {
+                                          must: [
+                                            {
+                                              term: {
+                                                taskStatus: "closed"
+                                              }
+                                            }
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  }
                                 }
+                              }
                             }
-                        }
+                          }
                     }
                 },
                 sort: [{
@@ -298,33 +296,33 @@ class Es < OpenStruct
                                         }
                                     }
                                 }
-                            },
-                            ComingTasksDue: {
-                                filter: {
-                                    bool: {
-                                        must: [{
-                                            exists: {
-                                                field: "estimatedDueDate"
-                                            }
-                                        }]
-                                    }
-                                },
-                                aggs: {
-                                    Range: {
-                                        date_range: {
-                                            field: "estimatedDueDate",
-                                            format: "date_time",
-                                            ranges: [{
-                                                from: "2014-06-01T00:00+0700",
-                                                to: "2014-06-01T00:00+0700||+1d-1s"
-                                            }, {
-                                                from: "2014-06-01T00:00+0700||+2d",
-                                                to: "2014-06-01T00:00+0700||+2d-1s"
-                                            }]
-                                        }
-                                    }
-                                }
                             }
+                            # ComingTasksDue: {
+                            #     filter: {
+                            #         bool: {
+                            #             must: [{
+                            #                 exists: {
+                            #                     field: "estimatedDueDate"
+                            #                 }
+                            #             }]
+                            #         }
+                            #     },
+                            #     aggs: {
+                            #         Range: {
+                            #             date_range: {
+                            #                 field: "estimatedDueDate",
+                            #                 format: "date_time",
+                            #                 ranges: [{
+                            #                     from: "2014-06-01T00:00+0700",
+                            #                     to: "2014-06-01T00:00+0700||+1d-1s"
+                            #                 }, {
+                            #                     from: "2014-06-01T00:00+0700||+2d",
+                            #                     to: "2014-06-01T00:00+0700||+2d-1s"
+                            #                 }]
+                            #             }
+                            #         }
+                            #     }
+                            # }
                         }
                     }
                 },

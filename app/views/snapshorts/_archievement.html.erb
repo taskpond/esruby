@@ -1,9 +1,10 @@
 <%
-	startRate    = @archievement.HavingScore.Star.value.blank? ? 0 : @archievement.HavingScore.Star.value
-	# overdue      = ?
-	onTime       = @archievement.HavingDueDate.doc_count.blank? ? 0 : @archievement.HavingDueDate.doc_count
-	closedTask   = 0 #@archievement.TaskStatus.Closed.doc_count.blank? ? 0 : @archievement.TaskStatus.Closed.doc_count
-	noTargetDate = @archievement.NoDueDate.doc_count.blank? ? 0 : @archievement.NoDueDate.doc_count
+	startRate    = @archievement.HavingScore.StarRate.value.blank? ? 0 : @archievement.HavingScore.StarRate.value
+	overdue      = @archievement.HavingDueDate.OverDue.doc_count.blank? ? 0 : @archievement.HavingDueDate.OverDue.doc_count
+	onTime       = @archievement.HavingDueDate.OnTime.doc_count.blank? ? 0 : @archievement.HavingDueDate.OnTime.doc_count
+	closedTask   = @archievement.TaskStatus.Closed.doc_count.blank? ? 0 : @archievement.TaskStatus.Closed.doc_count
+	noTargetDate = @archievement.NoTargetDate.doc_count.blank? ? 0 : @archievement.NoTargetDate.doc_count
+	# onTimeCompletion = ??
 %>
 <h2 style="font-size: 14px; font-family: helvetica; color:#3d4955; margin: 20px 0 25px; font-weight: normal;"><b>Month-to-Date Achievement</b></h2>
 <table>
@@ -38,28 +39,28 @@
 			<table cellpadding="0" cellspacing="0" border="0" width="200" align="right" style="font-size: 12px; font-family: helvetica; color:#3d4955;">
 				<tr>
 					<td>On-time</td>
-					<td align="right"><%= onTime %></td>
+					<td align="right"><%= number_with_delimiter onTime %></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border-top:1px solid #ccd7df;">&nbsp;</td>
 				</tr>
 				<tr>
 					<td>Overdue</td>
-					<td align="right">10,000</td>
+					<td align="right"><%= number_with_delimiter overdue %></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border-top:1px solid #ccd7df;">&nbsp;</td>
 				</tr>
 				<tr>
 					<td>No Target Date</td>
-					<td align="right"><%= noTargetDate %></td>
+					<td align="right"><%= number_with_delimiter noTargetDate %></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border-top:1px solid #ccd7df;">&nbsp;</td>
 				</tr>
 				<tr>
 					<td><b style="font-size: 14px;">Total Closed Tasks</b></td>
-					<td align="right"><b style="font-size: 14px;"><%= closedTask %></b></td>
+					<td align="right"><b style="font-size: 14px;"><%= number_with_delimiter closedTask %></b></td>
 				</tr>
 				<tr>
 					<td colspan="2" align="right" style="padding: 22px 0 0"><a href="#"><img src="http://static.taskworld.com/images/tw-button-go2dashboard.gif" alt="Go to Dashboard" width="122" height="23" border="0" /></a></td>

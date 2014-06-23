@@ -10,7 +10,7 @@ class SnapshortNotifier < ActionMailer::Base
 
         data.aggregations.Assignee.buckets.each do |bucket|
             @archievement = bucket.Month2Date
-            @schedule     = bucket.ComingTasksDue.Range
+            # @schedule     = bucket.ComingTasksDue.Range
         end
 
         mail( to: email, subject: subject) do |format|

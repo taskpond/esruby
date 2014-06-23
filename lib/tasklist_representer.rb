@@ -52,8 +52,11 @@ module TasklistRepresenter
                         property :OnTime do
                             collection :buckets
                         end
+                        property :OverDue do
+                            collection :buckets
+                        end
                     end
-                    property :NoDueDate do
+                    property :NoTargetDate do
                         property :doc_count
                     end
                     property :TaskStatus do
@@ -64,7 +67,7 @@ module TasklistRepresenter
                     end
                     property :HavingScore do
                         property :doc_count
-                        collection :Star do
+                        collection :StarRate do
                             property :value
                         end
                     end
