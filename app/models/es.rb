@@ -1,6 +1,7 @@
 require 'elasticsearch'
 require 'tasklist_representer'
 require 'user_representer'
+require 'mathn'
 
 class Es < OpenStruct
     INDEX      = 'tw_testing'
@@ -18,17 +19,7 @@ class Es < OpenStruct
 
     def daily(user_id)
         user_id ||= Es::DUMMYUSER
-        @archievement = {}
-        @schedule     = {}
-        @assign_to_me = {}
-        @assign_by_me = {}
-        @my_todo      = {}
-        @result       = self.fetch_data(user_id)
-
-        @result.aggregations.Assignee.buckets.each do |bucket|
-            @archievement = bucket.Month2Date
-            # @schedule     = bucket.ComingTasksDue.Range
-        end
+        @result = self.fetch_data(user_id)
 
         SnapshortNotifier.daily_snapshort('user@example.com', 'Daily Snapshort', @result).deliver
     end
@@ -50,162 +41,139 @@ class Es < OpenStruct
 
     def fetch_data(user_id)
         if !user_id.blank? && !user_id.to_i.eql?(0)
+            from = Time.now.at_beginning_of_month.utc
+            to = Time.now.utc
             response = @client.search index: Es::INDEX, type: Es::TASKLIST, body: {
-                size: 1,
-                query: {
-                    filtered: {
-                        filter: {
-                            bool: {
-                                should: [
-                                    {
-                                        term: {
-                                            assigneeId: user_id
-                                        }
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                },
-                aggs: {
-                    Assignee: {
-                        terms: {
-                            field: "assigneeId",
-                            size: 1
+              size: 0,
+              query: {
+                filtered: {
+                  filter: {
+                    bool: {
+                      must: [
+                        {
+                          term: {
+                            assigneeId: user_id
+                          }
                         },
-                        aggs: {
-                            Month2Date: {
+                        {
+                          range: {
+                            estimatedDueDate: {
+                              from: from,
+                              to: to
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              },
+              aggs: {
+                Assignee: {
+                  terms: {
+                    field: "assigneeId"
+                  },
+                  aggs: {
+                    Month2Date: {
+                      filter: {
+                        bool: {
+                          must: [
+                            {
+                              exists: {
+                                field: "taskStatus.raw"
+                              }
+                            },
+                            {
+                              term: {
+                                taskStatus: "closed"
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      aggs: {
+                        HavingDueDate: {
+                          filter: {
+                            bool: {
+                              must: [
+                                {
+                                  exists: {
+                                    field: "isFinishedOnTime"
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          aggs: {
+                            OnTime: {
                               filter: {
                                 bool: {
                                   must: [
                                     {
-                                      exists: {
-                                        field: "completedDate"
-                                      }
-                                    },
-                                    {
-                                      range: {
-                                        completedDate: {
-                                          to: "now/d"
-                                        }
+                                      term: {
+                                        isFinishedOnTime: "true"
                                       }
                                     }
                                   ]
                                 }
-                              },
-                              aggs: {
-                                HavingDueDate: {
-                                  filter: {
-                                    bool: {
-                                      must: [
-                                        {
-                                          exists: {
-                                            field: "isFinishedOnTime"
-                                          }
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  aggs: {
-                                    OnTime: {
-                                      filter: {
-                                        bool: {
-                                          must: [
-                                            {
-                                              term: {
-                                                isFinishedOnTime: "true"
-                                              }
-                                            }
-                                          ]
-                                        }
-                                      }
-                                    },
-                                    OverDue: {
-                                      filter: {
-                                        bool: {
-                                          must: [
-                                            {
-                                              term: {
-                                                isFinishedOnTime: "false"
-                                              }
-                                            }
-                                          ]
-                                        }
+                              }
+                            },
+                            OverDue: {
+                              filter: {
+                                bool: {
+                                  must: [
+                                    {
+                                      term: {
+                                        isFinishedOnTime: "false"
                                       }
                                     }
-                                  }
-                                },
-                                HavingScore: {
-                                  filter: {
-                                    bool: {
-                                      must: [
-                                        {
-                                          term: {
-                                            field: "satisfiedScore"
-                                          }
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  aggs: {
-                                    StarRate: {
-                                      avg: {
-                                        field: "satisfiedScore"
-                                      }
-                                    }
-                                  }
-                                },
-                                NoTargetDate: {
-                                  filter: {
-                                    bool: {
-                                      must: [
-                                        {
-                                          missing: {
-                                            field: "estimatedDueDate"
-                                          }
-                                        }
-                                      ]
-                                    }
-                                  }
-                                },
-                                TaskStatus: {
-                                  filter: {
-                                    bool: {
-                                      must: [
-                                        {
-                                          exists: {
-                                            field: "taskStatus"
-                                          }
-                                        }
-                                      ]
-                                    }
-                                  },
-                                  aggs: {
-                                    Closed: {
-                                      filter: {
-                                        bool: {
-                                          must: [
-                                            {
-                                              term: {
-                                                taskStatus: "closed"
-                                              }
-                                            }
-                                          ]
-                                        }
-                                      }
-                                    }
-                                  }
+                                  ]
                                 }
                               }
                             }
                           }
+                        },
+                        NoTargetDate: {
+                          filter: {
+                            bool: {
+                              must: [
+                                {
+                                  missing: {
+                                    field: "estimatedDueDate"
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        HavingScore: {
+                          filter: {
+                            bool: {
+                              must: [
+                                {
+                                  range: {
+                                    satisfiedScore: {
+                                      from: 1,
+                                      to: 5
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                          aggs: {
+                            StarRate: {
+                              avg: {
+                                field: "satisfiedScore"
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
-                },
-                sort: [{
-                    estimatedDueDate: {
-                        order: "asc"
-                    }
-                }]
+                  }
+                }
+              }
             }
         else
             response = @client.search index: Es::INDEX, type: Es::TASKLIST, body: {
@@ -333,7 +301,20 @@ class Es < OpenStruct
                 }]
             }
         end
-        result = Hashie::Mash.new response
-        return result
+        result   = Hashie::Mash.new response
+        data = {}
+        result.aggregations.Assignee.buckets.each do |bucket|
+            # Mont-to-Date
+            data[:archievement]   = bucket.Month2Date
+            data[:overDue]        = data[:archievement].HavingDueDate.OverDue.doc_count.blank? ? 0 : data[:archievement].HavingDueDate.OverDue.doc_count
+            data[:onTime]         = data[:archievement].HavingDueDate.OnTime.doc_count.blank? ? 0 : data[:archievement].HavingDueDate.OnTime.doc_count
+            data[:noTargetDate]   = data[:archievement].NoTargetDate.doc_count.blank? ? 0 : data[:archievement].NoTargetDate.doc_count
+            data[:closedTask]     = data[:onTime]+data[:overDue]+data[:noTargetDate]
+            data[:startRate]      = data[:archievement].HavingScore.StarRate.value.blank? ? 0 : data[:archievement].HavingScore.StarRate.value
+            data[:onTimeCompletion] = data[:closedTask].zero? ? 0 : (data[:onTime]/data[:closedTask])*100
+
+            # @schedule     = bucket.ComingTasksDue.Range
+        end
+        return Hashie::Mash.new data
     end
 end

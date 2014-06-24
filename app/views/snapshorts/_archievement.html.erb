@@ -1,11 +1,3 @@
-<%
-	startRate    = @archievement.HavingScore.StarRate.value.blank? ? 0 : @archievement.HavingScore.StarRate.value
-	overdue      = @archievement.HavingDueDate.OverDue.doc_count.blank? ? 0 : @archievement.HavingDueDate.OverDue.doc_count
-	onTime       = @archievement.HavingDueDate.OnTime.doc_count.blank? ? 0 : @archievement.HavingDueDate.OnTime.doc_count
-	closedTask   = @archievement.TaskStatus.Closed.doc_count.blank? ? 0 : @archievement.TaskStatus.Closed.doc_count
-	noTargetDate = @archievement.NoTargetDate.doc_count.blank? ? 0 : @archievement.NoTargetDate.doc_count
-	# onTimeCompletion = ??
-%>
 <h2 style="font-size: 14px; font-family: helvetica; color:#3d4955; margin: 20px 0 25px; font-weight: normal;"><b>Month-to-Date Achievement</b></h2>
 <table>
 	<tr>
@@ -16,7 +8,7 @@
 						<img src="http://static.taskworld.com/images/tw-clock.png" width="85" height="85" style="display: block;"/>
 					</td>
 					<td valign="top">
-						<span style="font-size: 20px; font-family: helvetica;color:#83959d; display: block; padding: 5px 0 10px;">100.0%</span>
+						<span style="font-size: 20px; font-family: helvetica;color:#83959d; display: block; padding: 5px 0 10px;"><%= number_to_percentage(@result.onTimeCompletion, precision: 1) %></span>
 						<span style="font-size: 12px; font-family: helvetica;color:#83959d; display: block; line-height: 13px;">On-time<br /> Completion (%)</span>
 					</td>
 				</tr>
@@ -29,7 +21,7 @@
 						<img src="http://static.taskworld.com/images/tw-star.png"  width="85" height="85"  style="display: block;"/></td>
 					</td>
 					<td valign="top">
-						<span style="font-size: 20px; font-family: helvetica;color:#83959d; display: block; padding: 5px 0 10px;"><%= startRate %></span>
+						<span style="font-size: 20px; font-family: helvetica;color:#83959d; display: block; padding: 5px 0 10px;"><%= @result.startRate %></span>
 						<span style="font-size: 12px; font-family: helvetica;color:#83959d; display: block; line-height: 13px;">Star<br /> Rating (1-5)</span>
 					</td>
 				</tr>
@@ -39,31 +31,31 @@
 			<table cellpadding="0" cellspacing="0" border="0" width="200" align="right" style="font-size: 12px; font-family: helvetica; color:#3d4955;">
 				<tr>
 					<td>On-time</td>
-					<td align="right"><%= number_with_delimiter onTime %></td>
+					<td align="right"><%= number_with_delimiter @result.onTime %></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border-top:1px solid #ccd7df;">&nbsp;</td>
 				</tr>
 				<tr>
 					<td>Overdue</td>
-					<td align="right"><%= number_with_delimiter overdue %></td>
+					<td align="right"><%= number_with_delimiter @result.overDue %></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border-top:1px solid #ccd7df;">&nbsp;</td>
 				</tr>
 				<tr>
 					<td>No Target Date</td>
-					<td align="right"><%= number_with_delimiter noTargetDate %></td>
+					<td align="right"><%= number_with_delimiter @result.noTargetDate %></td>
 				</tr>
 				<tr>
 					<td colspan="2" style="border-top:1px solid #ccd7df;">&nbsp;</td>
 				</tr>
 				<tr>
 					<td><b style="font-size: 14px;">Total Closed Tasks</b></td>
-					<td align="right"><b style="font-size: 14px;"><%= number_with_delimiter closedTask %></b></td>
+					<td align="right"><b style="font-size: 14px;"><%= number_with_delimiter @result.closedTask %></b></td>
 				</tr>
 				<tr>
-					<td colspan="2" align="right" style="padding: 22px 0 0"><a href="#"><img src="http://static.taskworld.com/images/tw-button-go2dashboard.gif" alt="Go to Dashboard" width="122" height="23" border="0" /></a></td>
+					<td colspan="2" align="right" style="padding: 22px 0 0"><a href="//taskworld.com/dashboard#"><img src="http://static.taskworld.com/images/tw-button-go2dashboard.gif" alt="Go to Dashboard" width="122" height="23" border="0" /></a></td>
 				</tr>
 			</table>
 		</td>
