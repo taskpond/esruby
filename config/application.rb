@@ -21,5 +21,9 @@ module ElasticsearchRuby
     # config.i18n.default_locale = :de
 
     config.assets.precompile += %w( flatly.css flatly.js )
+
+    config.generators do |g|
+      g.test_framework :rspec
+    end
   end
 end

@@ -67,3 +67,19 @@ gem 'representable'
 gem 'hashie'
 
 gem 'whenever'
+
+group :development, :test do
+  # Rspec
+  gem 'rspec-rails', '~> 2.6'
+
+  # Spork
+  gem 'spork', :github => 'sporkrb/spork'
+  gem 'spork-rails', :github => 'sporkrb/spork-rails'
+
+  # Guard
+  gem 'growl'
+  gem 'rb-fsevent', :require => false if RUBY_PLATFORM =~ /darwin/i
+  gem 'guard-bundler'
+  gem 'guard-rspec'
+  gem 'guard-spork'
+end
