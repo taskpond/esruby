@@ -162,8 +162,8 @@ class Es < OpenStruct
                             }
                           },
                           aggs: {
-                            StarRate: {
-                              avg: {
+                            Stats: {
+                              stats: {
                                 field: "satisfiedScore"
                               }
                             }
@@ -310,7 +310,7 @@ class Es < OpenStruct
             data[:onTime]         = data[:archievement].HavingDueDate.OnTime.doc_count.blank? ? 0 : data[:archievement].HavingDueDate.OnTime.doc_count
             data[:noTargetDate]   = data[:archievement].NoTargetDate.doc_count.blank? ? 0 : data[:archievement].NoTargetDate.doc_count
             data[:closedTask]     = data[:onTime]+data[:overDue]+data[:noTargetDate]
-            data[:startRate]      = data[:archievement].HavingScore.StarRate.value.blank? ? 0 : data[:archievement].HavingScore.StarRate.value
+            data[:startRate]      = data[:archievement].HavingScore.Stats.avg.to_f
             data[:onTimeCompletion] = data[:closedTask].zero? ? 0 : (data[:onTime]/data[:closedTask])*100
 
             # @schedule     = bucket.ComingTasksDue.Range

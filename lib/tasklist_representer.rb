@@ -67,8 +67,12 @@ module TasklistRepresenter
                     end
                     property :HavingScore do
                         property :doc_count
-                        collection :StarRate do
-                            property :value
+                        collection :Stats do
+                            property :count
+                            property :min
+                            property :max
+                            property :avg
+                            property :sum
                         end
                     end
                 end
