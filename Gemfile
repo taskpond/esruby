@@ -55,6 +55,7 @@ gem 'rest-client'
 gem 'elasticsearch', git: 'git://github.com/elasticsearch/elasticsearch-ruby.git'
 gem 'elasticsearch-model', git: 'git://github.com/elasticsearch/elasticsearch-rails.git'
 gem 'elasticsearch-rails', git: 'git://github.com/elasticsearch/elasticsearch-rails.git'
+gem 'elasticsearch-extensions', git: 'git://github.com/elasticsearch/elasticsearch-ruby.git'
 
 gem 'tire'
 
@@ -71,6 +72,7 @@ gem 'whenever'
 group :development, :test do
   # Rspec
   gem 'rspec-rails', '~> 2.6'
+  gem 'rspec-rails-mocha', '~> 0.3.1', :require => false
 
   # Spork
   gem 'spork', :github => 'sporkrb/spork'

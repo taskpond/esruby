@@ -14,7 +14,6 @@ class SnapshortsController < ApplicationController
         user_id       = params[:user_id].present? ? params[:user_id] : 141
         @result       = Es.new
         @result       = @result.fetch_data(user_id)
-
         # SnapshortNotifier.daily_snapshort('user@example.com', 'Daily Snapshort', @result).deliver
 
         return render layout: nil

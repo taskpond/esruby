@@ -2,6 +2,13 @@ require 'rubygems'
 require 'spork'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
+require 'elasticsearch/extensions'
+module Elasticsearch
+  module Test
+    class IntegrationTestCase
+    end
+  end
+end
 
 Spork.prefork do
   # Loading more in this block will cause your tests to run faster. However,
@@ -19,7 +26,10 @@ Spork.prefork do
 
   RSpec.configure do |config|
     # Mock Framework
-    config.mock_with :rspec
+    # config.mock_with :rspec
+    # config.mock_with :mocha
+    # config.mock_with :flexmock
+    # config.mock_with :rr
 
     # If you're not using ActiveRecord, or you'd prefer not to run each of your
     # examples within a transaction, remove the following line or assign false
