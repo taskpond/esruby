@@ -74,10 +74,25 @@ module TasklistRepresenter
                         end
                     end
                 end
-                property :ComingTasksDue do
+                property :UpcomingTask do
                     property :doc_count
-                    property :Range do
-                        collection :buckets
+                    property :Today do
+                        property :doc_count
+                    end
+                    property :Tomorrow do
+                        property :doc_count
+                    end
+                    property :ThisWeek do
+                        property :doc_count
+                    end
+                    property :NextWeek do
+                        property :doc_count
+                    end
+                    property :ThisMonth do
+                        property :doc_count
+                    end
+                    property :NextMonth do
+                        property :doc_count
                     end
                 end
             end

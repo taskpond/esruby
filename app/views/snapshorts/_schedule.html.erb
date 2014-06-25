@@ -1,4 +1,3 @@
-<% schedule = ["Today", "Tomorrow", "This Week", "Next Week", "This Month", "Next Month"] %>
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top: 1px solid #ccd7df;">
 	<tr>
 		<td width="25">&nbsp;</td>
@@ -138,26 +137,21 @@
 <table cellpadding="0" cellspacing="0" border="0">
 	<tr>
 		<td width="38"></td>
-		<% @schedule.buckets.each do |bucket| %>
-			<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= bucket.doc_count %></a></b></td>
-		<% end %>
-		<!-- <td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;">6,000</a></b></td>
-		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;">3,000</a></b></td>
-		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;">10,000</a></b></td>
-		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;">8,000</a></b></td>
-		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;">7,000</a></b></td>
-		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;">16,000</a></b></td> -->
+
+		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= @result.Today %></a></b></td>
+		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= @result.Tomorrow %></a></b></td>
+		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= @result.ThisWeek %></a></b></td>
+		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= @result.NextWeek %></a></b></td>
+		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= @result.ThisMonth %></a></b></td>
+		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= @result.NextMonth %></a></b></td>
 	</tr>
 	<tr>
 		<td></td>
-		<% @schedule.buckets.each_with_index do |bucket, index| %>
-			<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;"><%= schedule[index] %></a></td>
-		<% end %>
-		<!-- <td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">Today</a></td>
+		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">Today</a></td>
 		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">Tomorrow</a></td>
 		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">This Week</a></td>
 		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">Next Week</a></td>
 		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">This Month</a></td>
-		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">Next Month</a></td>-->
+		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">Next Month</a></td>
 	</tr>
 </table>

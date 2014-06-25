@@ -39,11 +39,11 @@
 				<!-- -->
 
 				<!-- -->
-				<% if @schedule.present? && !@schedule.blank? %>
+				<% if @result.upcomingTasks.present? %>
 					<tr>
 						<td><br />
 							<!-- SCHEDULE -->
-							<%= render 'schedule', locals: { schedule: @schedule } %>
+							<%= render 'schedule', locals: { result: @result } %>
 						<br /></td>
 					</tr>
 				<% end %>
