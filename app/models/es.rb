@@ -8,6 +8,7 @@ class Es < OpenStruct
     TASKLIST   = 'tasklist'
     MEMBERLIST = 'memberlist'
     DUMMYUSER  = 537
+    FROMDUMMY  = '2014-04-30T23:59:59'.to_datetime
 
     def initialize
         @client = Elasticsearch::Client.new url: 'http://es.taskworld.com:80', timeout: 1
@@ -18,8 +19,10 @@ class Es < OpenStruct
     def daily(user_id)
         user_id ||= Es::DUMMYUSER
         @result = self.fetch_data(user_id)
+        @assign_to_me = self.assign_to_me(user_id)
+        @data = { result: @result, assign_to_me: @assign_to_me }
 
-        SnapshortNotifier.daily_snapshort('user@example.com', 'Your Daily Snapshot', @result).deliver
+        SnapshortNotifier.daily_snapshort('user@example.com', 'Your Daily Snapshot', @data).deliver
     end
 
     def fetch_user
