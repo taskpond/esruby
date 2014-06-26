@@ -319,4 +319,83 @@ class Es < OpenStruct
             return Hashie::Mash.new data
         end
     end
+
+    def assign_to_me(user_id)
+        tasklist   = {}
+        from       = '2014-04-28T00:00:00'
+        to         = '2014-04-28T23:59:59'
+        tasklist[:overdue]    = self.tasklist('assign_to_me', 'overdue', user_id, from, to)
+        tasklist[:inprogress] = self.tasklist('assign_to_me', 'inprogress', user_id, from, to)
+        tasklist[:completed]  = self.tasklist('assign_to_me', 'completed', user_id, from, to)
+        tasklist[:haveTask?]  = [tasklist[:overdue].hits.total, tasklist[:inprogress].hits.total, tasklist[:completed].hits.total].sum
+        return Hashie::Mash.new tasklist
+    end
+
+    def assibn_by_me(user_id)
+    end
+
+    def my_todo(user_id)
+    end
+
+    def tasklist(scenario, task_status, user_id, from, to)
+        query = {
+          size: 10,
+          query: {
+            filtered: {
+              filter: {
+                bool: {}
+              }
+            }
+          }
+        }
+        if scenario.eql?('assign_to_me')
+            must = {
+                must: [{
+                  term: {
+                    assigneeId: user_id
+                  }
+                },
+                {
+                  range: {
+                    estimatedDueDate: {
+                      from: from,
+                      to: to
+                    }
+                  }
+                },
+                {
+                  term: {
+                    taskStatus: task_status
+                  }
+                }]
+            }
+        elsif scenario.eql?('assign_by_me')
+            must = {
+              must: [
+                {
+                  term: {
+                    assignerId: user_id
+                  }
+                },
+                {
+                  range: {
+                    estimatedDueDate: {
+                      from: from,
+                      to: to
+                    }
+                  }
+                },
+                {
+                  term: {
+                    taskStatus: task_status
+                  }
+                }
+              ]
+            }
+        end
+        query[:query][:filtered][:filter][:bool] = must
+        response = @client.search index: Es::INDEX, type: Es::TASKLIST, body: query
+        return Hashie::Mash.new response
+    end
+
 end
