@@ -1,5 +1,5 @@
 class SnapshortNotifier < ActionMailer::Base
-    default from: "no-reply@example.com"
+    default from: "Taskworld<no-reply@example.com>"
 
     def daily_snapshort(email, subject, data)
         @result = data

@@ -35,7 +35,7 @@
 				</tr>
 			</table>
 		</td>
-		<td valign="top"><a href="#"><img src="http://static.taskworld.com/images/tw-task-plan-big.gif" alt="Today" width="21" height="21" border="0" style="display: block;" /></a></td>
+		<td valign="top"><a href="//taskworld.com/task#tasksdue/today"><img src="http://static.taskworld.com/images/tw-task-plan-big.gif" alt="Today" width="21" height="21" border="0" style="display: block;" /></a></td>
 		<td width="78" valign="top">
 			<table cellpadding="0" cellspacing="0" border="0">
 				<tr>
@@ -49,7 +49,7 @@
 				</tr>
 			</table>
 		</td>
-		<td valign="top"><a href="#"><img src="http://static.taskworld.com/images/tw-task-plan1.gif" alt="Tomorrow" width="21" height="21" border="0" style="display: block;" /></a></td>
+		<td valign="top"><a href="//taskworld.com/task#tasksdue/tomorrow"><img src="http://static.taskworld.com/images/tw-task-plan1.gif" alt="Tomorrow" width="21" height="21" border="0" style="display: block;" /></a></td>
 		<td width="78" valign="top">
 			<table cellpadding="0" cellspacing="0" border="0">
 				<tr>
@@ -63,7 +63,7 @@
 				</tr>
 			</table>
 		</td>
-		<td valign="top"><a href="#"><img src="http://static.taskworld.com/images/tw-task-plan2.gif" alt="This Week" width="21" height="21" border="0" style="display: block;" /></a></td>
+		<td valign="top"><a href="//taskworld.com/task#tasksdue/thisweek"><img src="http://static.taskworld.com/images/tw-task-plan2.gif" alt="This Week" width="21" height="21" border="0" style="display: block;" /></a></td>
 		<td width="78" valign="top">
 			<table cellpadding="0" cellspacing="0" border="0">
 				<tr>
@@ -77,7 +77,7 @@
 				</tr>
 			</table>
 		</td>
-		<td valign="top"><a href="#"><img src="http://static.taskworld.com/images/tw-task-plan3.gif" alt="Next Week" width="21" height="21" border="0" style="display: block;" /></a></td>
+		<td valign="top"><a href="//taskworld.com/task#tasksdue/nextweek"><img src="http://static.taskworld.com/images/tw-task-plan3.gif" alt="Next Week" width="21" height="21" border="0" style="display: block;" /></a></td>
 		<td width="78" valign="top">
 			<table cellpadding="0" cellspacing="0" border="0">
 				<tr>
@@ -91,7 +91,7 @@
 				</tr>
 			</table>
 		</td>
-		<td valign="top"><a href="#"><img src="http://static.taskworld.com/images/tw-task-plan4.gif" alt="This Month" width="21" height="21" border="0" style="display: block;" /></a></td>
+		<td valign="top"><a href="//taskworld.com/task#tasksdue/thismonth"><img src="http://static.taskworld.com/images/tw-task-plan4.gif" alt="This Month" width="21" height="21" border="0" style="display: block;" /></a></td>
 		<td width="78" valign="top">
 			<table cellpadding="0" cellspacing="0" border="0">
 				<tr>
@@ -105,7 +105,7 @@
 				</tr>
 			</table>
 		</td>
-		<td valign="top"><a href="#"><img src="http://static.taskworld.com/images/tw-task-plan5.gif" alt="Next Month" width="21" height="21" border="0" style="display: block;" /></a></td>
+		<td valign="top"><a href="//taskworld.com/task#tasksdue/nextmonth"><img src="http://static.taskworld.com/images/tw-task-plan5.gif" alt="Next Month" width="21" height="21" border="0" style="display: block;" /></a></td>
 		<td width="50" valign="top">
 			<table cellpadding="0" cellspacing="0" border="0">
 				<tr>
@@ -138,20 +138,32 @@
 	<tr>
 		<td width="38"></td>
 
-		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= @result.Today %></a></b></td>
-		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= @result.Tomorrow %></a></b></td>
-		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= @result.ThisWeek %></a></b></td>
-		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= @result.NextWeek %></a></b></td>
-		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= @result.ThisMonth %></a></b></td>
-		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;"><b><a href="#" style="color:#3d4955; text-decoration: none;"><%= @result.NextMonth %></a></b></td>
+		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;">
+			<b><a href="//taskworld.com/task#tasksdue/today" style="color:#3d4955; text-decoration: none;"><%= @result.Today %></a></b>
+		</td>
+		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;">
+			<b><a href="//taskworld.com/task#tasksdue/tomorrow" style="color:#3d4955; text-decoration: none;"><%= @result.Tomorrow %></a></b>
+		</td>
+		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;">
+			<b><a href="//taskworld.com/task#tasksdue/thisweek" style="color:#3d4955; text-decoration: none;"><%= @result.ThisWeek %></a></b>
+		</td>
+		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;">
+			<b><a href="//taskworld.com/task#tasksdue/nextweek" style="color:#3d4955; text-decoration: none;"><%= @result.NextWeek %></a></b>
+		</td>
+		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;">
+			<b><a href="//taskworld.com/task#tasksdue/thismonth" style="color:#3d4955; text-decoration: none;"><%= @result.ThisMonth %></a></b>
+		</td>
+		<td align="center" width="99" style="padding:15px 0 8px; font-size:18px; font-family: helvetica;">
+			<b><a href="//taskworld.com/task#tasksdue/nextmonth" style="color:#3d4955; text-decoration: none;"><%= @result.NextMonth %></a></b>
+		</td>
 	</tr>
 	<tr>
 		<td></td>
-		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">Today</a></td>
-		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">Tomorrow</a></td>
-		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">This Week</a></td>
-		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">Next Week</a></td>
-		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">This Month</a></td>
-		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="#" style="color:#3d4955; text-decoration: none;">Next Month</a></td>
+		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="//taskworld.com/task#tasksdue/today" style="color:#3d4955; text-decoration: none;">Today</a></td>
+		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="//taskworld.com/task#tasksdue/tomorrow" style="color:#3d4955; text-decoration: none;">Tomorrow</a></td>
+		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="//taskworld.com/task#tasksdue/thisweek" style="color:#3d4955; text-decoration: none;">This Week</a></td>
+		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="//taskworld.com/task#tasksdue/nextweek" style="color:#3d4955; text-decoration: none;">Next Week</a></td>
+		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="//taskworld.com/task#tasksdue/thismonth" style="color:#3d4955; text-decoration: none;">This Month</a></td>
+		<td align="center" style="font-size: 12px; font-family: helvetica;"><a href="//taskworld.com/task#tasksdue/nextmonth" style="color:#3d4955; text-decoration: none;">Next Month</a></td>
 	</tr>
 </table>

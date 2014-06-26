@@ -19,7 +19,7 @@ class Es < OpenStruct
         user_id ||= Es::DUMMYUSER
         @result = self.fetch_data(user_id)
 
-        SnapshortNotifier.daily_snapshort('user@example.com', 'Daily Snapshort', @result).deliver
+        SnapshortNotifier.daily_snapshort('user@example.com', 'Your Daily Snapshot', @result).deliver
     end
 
     def fetch_user
@@ -313,6 +313,7 @@ class Es < OpenStruct
                 data[:NextWeek]      = data[:upcomingTasks].NextWeek.doc_count
                 data[:ThisMonth]     = data[:upcomingTasks].ThisMonth.doc_count
                 data[:NextMonth]     = data[:upcomingTasks].NextMonth.doc_count
+                data[:showUpcomingTask] = [data[:Today], data[:Tomorrow], data[:ThisWeek], data[:NextWeek], data[:ThisMonth], data[:NextMonth]].sum
             end
 
             return Hashie::Mash.new data
