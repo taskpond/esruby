@@ -325,22 +325,46 @@ class Es < OpenStruct
 
     def assign_to_me(user_id)
         tasklist   = {}
-        from       = '2014-04-01T00:00:00'
-        to         = '2014-04-30T23:59:59'
-        tasklist[:overdue]    = self.tasklist('assign_to_me', 'overdue', user_id, from, to)
-        tasklist[:inprogress] = self.tasklist('assign_to_me', 'inprogress', user_id, from, to)
-        tasklist[:completed]  = self.tasklist('assign_to_me', 'completed', user_id, from, to)
-        tasklist[:haveTask?]  = [tasklist[:overdue].hits.total, tasklist[:inprogress].hits.total, tasklist[:completed].hits.total].sum
+        tasklist[:overdue]    = self.tasklist('assign_to_me', 'overdue', user_id)
+        tasklist[:inprogress] = self.tasklist('assign_to_me', 'inprogress', user_id)
+        tasklist[:completed]  = self.tasklist('assign_to_me', 'completed', user_id)
+        tasklist[:haveTask?]  = [tasklist[:overdue].hits.total, tasklist[:inprogress].hits.total, tasklist[:completed].hits.total].sum.zero? ? false : true
         return Hashie::Mash.new tasklist
     end
 
-    def assibn_by_me(user_id)
+    def assign_by_me(user_id)
+        tasklist   = {}
+        tasklist[:overdue]    = self.tasklist('assign_by_me', 'overdue', user_id)
+        tasklist[:inprogress] = self.tasklist('assign_by_me', 'inprogress', user_id)
+        tasklist[:completed]  = self.tasklist('assign_by_me', 'completed', user_id)
+        tasklist[:haveTask?]  = [tasklist[:overdue].hits.total, tasklist[:inprogress].hits.total, tasklist[:completed].hits.total].sum.zero? ? false : true
+
+        return Hashie::Mash.new tasklist
     end
 
     def my_todo(user_id)
+        tasklist   = {}
+        tasklist[:overdue]    = self.tasklist('my_todo', 'overdue', user_id)
+        tasklist[:inprogress] = self.tasklist('my_todo', 'inprogress', user_id)
+        tasklist[:completed]  = self.tasklist('my_todo', 'completed', user_id)
+        tasklist[:haveTask?]  = [tasklist[:overdue].hits.total, tasklist[:inprogress].hits.total, tasklist[:completed].hits.total].sum.zero? ? false : true
+
+        return Hashie::Mash.new tasklist
     end
 
-    def tasklist(scenario, task_status, user_id, from, to)
+    def following(user_id)
+        tasklist   = {}
+        tasklist[:overdue]    = self.tasklist('following', 'overdue', user_id)
+        tasklist[:inprogress] = self.tasklist('following', 'inprogress', user_id)
+        tasklist[:completed]  = self.tasklist('following', 'completed', user_id)
+        tasklist[:haveTask?]  = [tasklist[:overdue].hits.total, tasklist[:inprogress].hits.total, tasklist[:completed].hits.total].sum.zero? ? false : true
+
+        return Hashie::Mash.new tasklist
+    end
+
+    def tasklist(scenario, task_status, user_id, from=nil, to=nil)
+        from  =  from.blank? ? '2014-04-01T00:00:00' : from
+        to    =  to.blank? ? '2014-04-30T23:59:59' : to
         query = {
           size: 10,
           query: {
@@ -349,7 +373,19 @@ class Es < OpenStruct
                 bool: {}
               }
             }
-          }
+          },
+          sort: [
+            {
+              estimatedDueDate: {
+                order: "asc"
+              }
+            },
+            {
+              subject: {
+                order: "asc"
+              }
+            }
+          ]
         }
         if scenario.eql?('assign_to_me')
             must = {
@@ -378,6 +414,57 @@ class Es < OpenStruct
                 {
                   term: {
                     assignerId: user_id
+                  }
+                },
+                {
+                  range: {
+                    estimatedDueDate: {
+                      from: from,
+                      to: to
+                    }
+                  }
+                },
+                {
+                  term: {
+                    taskStatus: task_status
+                  }
+                }
+              ]
+            }
+        elsif scenario.eql?('my_todo')
+            must = {
+              must: [
+                {
+                  term: {
+                    assigneeId: user_id
+                  }
+                },
+                {
+                  term: {
+                    requestorId: user_id
+                  }
+                },
+                {
+                  range: {
+                    estimatedDueDate: {
+                      from: from,
+                      to: to
+                    }
+                  }
+                },
+                {
+                  term: {
+                    taskStatus: task_status
+                  }
+                }
+              ]
+            }
+        elsif scenario.eql?('following')
+            must = {
+              must: [
+                {
+                  term: {
+                    followers: user_id
                   }
                 },
                 {

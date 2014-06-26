@@ -15,6 +15,9 @@ class SnapshortsController < ApplicationController
         @data         = Es.new
         @result       = @data.fetch_data(user_id)
         @assign_to_me = @data.assign_to_me(user_id)
+        @assign_by_me = @data.assign_by_me(user_id)
+        @my_todo      = @data.my_todo(user_id)
+        @following    = @data.following(user_id)
         # byebug
         # SnapshortNotifier.daily_snapshort('user@example.com', 'Daily Snapshort', @result).deliver
 

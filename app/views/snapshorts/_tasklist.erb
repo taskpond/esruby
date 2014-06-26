@@ -1,0 +1,110 @@
+<h2 style="font-size: 14px; font-family: helvetica; color:#3d4955; font-weight: normal;"><b><%= task_title %></b></h2>
+
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="color: #ffffff; font-size: 13px; font-family: helvetica;">
+	<tr>
+		<td style="background-color: #ea5050; border: 1px solid #ea5050;" width="206">
+			<table cellpadding="5" cellspacing="0" border="0" width="180" align="center">
+				<tr>
+					<td style="color: #ffffff; font-family: helvetica;">
+						<a href="//taskworld.com/task#tome?status=overdue" style="color: #ffffff; text-decoration:none;">Overdue</a>
+					</td>
+					<td align="right" style="font-size: 18px; font-family: helvetica; color: #ffffff;">
+						<a href="//taskworld.com/task#tome?status=overdue" style="color: #ffffff; text-decoration:none;"><%= response.overdue.hits.total %></a>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td style="background-color: #3cbaeb; border-top: 1px solid #3cbaeb; border-bottom: 1px solid #3cbaeb;" width="208">
+			<table cellpadding="5" cellspacing="0" border="0" width="180" align="center">
+				<tr>
+					<td style="color: #ffffff; font-family: helvetica;">
+						<a href="//taskworld.com/task#tome?status=completed" style="color: #ffffff; text-decoration:none;">Completed</a>
+					</td>
+					<td align="right" style="font-size: 18px; font-family: helvetica; color: #ffffff;">
+						<a href="//taskworld.com/task#tome?status=completed" style="color: #ffffff; text-decoration:none;"><%= response.completed.hits.total %></a>
+					</td>
+				</tr>
+			</table>
+		</td>
+		<td style="background-color: #3dc178; border: 1px solid #3dc178;" width="206">
+			<table cellpadding="5" cellspacing="0" border="0" width="180" align="center">
+				<tr>
+					<td style="color: #ffffff; font-family: helvetica;">
+						<a href="//taskworld.com/task#tome?status=inprogress" style="color: #ffffff; text-decoration:none;">In Progress</a>
+					</td>
+					<td align="right" style="font-size: 18px; font-family: helvetica; color: #ffffff;">
+						<a href="//taskworld.com/task#tome?status=inprogress" style="color: #ffffff; text-decoration:none;"><%= response.inprogress.hits.total %></a>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table><br />
+
+<table cellpadding="0" cellspacing="0" border="0" width="620" style="background-color: #ffffff; border: 1px solid #e8ebec; border-bottom: 0;
+font-size: 13px; font-family: helvetica;"
+>
+	<% response.overdue.hits.hits.each do |task| %>
+	<% variance_day = distance_of_time_in_words(task._source.estimatedDueDate.to_datetime, @from) %>
+	<tr>
+		<td style="padding: 6px 6px 6px 10px;" valign="top">
+			<%= link_to task._source.subject, "//taskworld.com/task#id/#{task._source.id}", style: "text-decoration: none; color:#3d4955" %>
+		</td>
+		<td style="padding:4px;" width="35" align="right" valign="top">
+			<table style="background-color: #ea5050; color: #ffffff; width:35px;">
+				<tr>
+					<td align="right" style="font-size: 13px; font-family: helvetica;"><%= variance_day %></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="height:1px; background-color:#e8ebec; font-size:1; line-height:1px;">&nbsp;</td>
+	</tr>
+	<% end %>
+
+	<% response.completed.hits.hits.each do |task| %>
+	<% variance_day = distance_of_time_in_words(task._source.estimatedDueDate.to_datetime, task._source.completedDate.to_datetime) %>
+	<tr>
+		<td style="padding: 6px 6px 6px 10px;" valign="top">
+			<%= link_to task._source.subject, "//taskworld.com/task#id/#{task._source.id}", style: "text-decoration: none; color:#3d4955" %>
+		</td>
+		<td style="padding:4px;" width="35" align="right" valign="top">
+			<table style="background-color: #6dcff6; color: #ffffff; width:35px;">
+				<tr>
+					<td align="right" style="font-size: 13px; font-family: helvetica;"><%= variance_day %></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="height:1px; background-color:#e8ebec; font-size:1; line-height:1px;">&nbsp;</td>
+	</tr>
+	<% end %>
+
+	<% response.inprogress.hits.hits.each do |task| %>
+	<% variance_day = distance_of_time_in_words(task._source.estimatedDueDate.to_datetime, @from) %>
+	<tr>
+		<td style="padding: 6px 6px 6px 10px;" valign="top">
+			<%= link_to task._source.subject, "//taskworld.com/task#id/#{task._source.id}", style: "text-decoration: none; color:#3d4955" %>
+		</td>
+		<td style="padding:4px;" width="35" align="right" valign="top">
+			<table style="background-color: #00ca7b; color: #ffffff; width:35px;">
+				<tr>
+					<td align="right" style="font-size: 13px; font-family: helvetica;"><%= variance_day %></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="height:1px; background-color:#e8ebec; font-size:1; line-height:1px;">&nbsp;</td>
+	</tr>
+	<% end %>
+</table>
+<table cellpadding="0" cellspacing="0" border="0" width="620">
+	<tr>
+		<td align="right" style="background-color: #f0f3f4;">
+			<a href="//taskworld.com/task#tome?status=active"><img src="http://static.taskworld.com/images/tw-button-view-all1.gif" alt="View All" width="75" height="23" border="0" /></a>
+		</td>
+	</tr>
+</table>

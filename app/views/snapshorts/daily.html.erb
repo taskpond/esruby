@@ -77,31 +77,43 @@
 						<td style="background-color: #eff2f4; padding: 0 25px 5px;">
 
 							<!-- ASSIGN TO ME -->
-							<%= render 'assign_to_me' %>
+							<%= render 'tasklist', task_title: 'Assign To Me', :response => @assign_to_me  %>
 						</td>
 					</tr>
 				<% end %>
 				<!-- -->
 
 				<!-- -->
-				<% if @assign_by_me.present? && !@assign_to_me.blank? %>
+				<% if @assign_by_me.haveTask? %>
 					<tr>
 						<td style="background-color: #f0f3f4; padding: 0 25px 5px;">
 
 							<!-- ASSIGN BY ME -->
-							<%= render 'assign_by_me', locals: { result: @assign_by_me } %>
+							<%= render 'tasklist', task_title: 'Assign By Me', :response => @assign_by_me %>
 						</td>
 					</tr>
 				<% end %>
 				<!-- -->
 
 				<!-- -->
-				<% if @my_todo.present? && !@my_todo.blank? %>
+				<% if @my_todo.haveTask? %>
 					<tr>
 						<td style="background-color: #f0f3f4; padding: 0 25px 5px;">
 
 							<!-- MY TODO -->
-							<%= render 'my_todo', locals: { my_todo: @my_todo } %>
+							<%= render 'tasklist', task_title: 'My To-Do', :response => @my_todo %>
+						</td>
+					</tr>
+				<% end %>
+				<!-- -->
+
+				<!-- -->
+				<% if @following.haveTask? %>
+					<tr>
+						<td style="background-color: #f0f3f4; padding: 0 25px 5px;">
+
+							<!-- MY TODO -->
+							<%= render 'tasklist', task_title: 'Following', :response => @following %>
 						</td>
 					</tr>
 				<% end %>
