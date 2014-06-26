@@ -51,7 +51,7 @@ font-size: 13px; font-family: helvetica;"
 			<%= link_to task._source.subject, "//taskworld.com/task#id/#{task._source.id}", style: "text-decoration: none; color:#3d4955" %>
 		</td>
 		<td style="padding:4px;" width="35" align="right" valign="top">
-			<table style="background-color: #00ca7b; color: #ffffff; width:35px;">
+			<table style="background-color: #ea5050; color: #ffffff; width:35px;">
 				<tr>
 					<td align="right" style="font-size: 13px; font-family: helvetica;"><%= variance_day %></td>
 				</tr>
@@ -64,13 +64,13 @@ font-size: 13px; font-family: helvetica;"
 	<% end %>
 
 	<% @assign_to_me.completed.hits.hits.each do |task| %>
-	<% variance_day = distance_of_time_in_words(task._source.estimatedDueDate.to_datetime, @from) %>
+	<% variance_day = distance_of_time_in_words(task._source.estimatedDueDate.to_datetime, task._source.completedDate.to_datetime) %>
 	<tr>
 		<td style="padding: 6px 6px 6px 10px;" valign="top">
 			<%= link_to task._source.subject, "//taskworld.com/task#id/#{task._source.id}", style: "text-decoration: none; color:#3d4955" %>
 		</td>
 		<td style="padding:4px;" width="35" align="right" valign="top">
-			<table style="background-color: #00ca7b; color: #ffffff; width:35px;">
+			<table style="background-color: #6dcff6; color: #ffffff; width:35px;">
 				<tr>
 					<td align="right" style="font-size: 13px; font-family: helvetica;"><%= variance_day %></td>
 				</tr>

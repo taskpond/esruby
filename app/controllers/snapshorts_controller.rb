@@ -10,7 +10,7 @@ class SnapshortsController < ApplicationController
     end
 
     def daily
-        @from       = '2014-04-28T00:00:00'.to_datetime
+        @from       = '2014-04-30T23:59:59'.to_datetime
         user_id       = params[:user_id].present? ? params[:user_id] : 141
         @data         = Es.new
         @result       = @data.fetch_data(user_id)

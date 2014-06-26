@@ -322,8 +322,8 @@ class Es < OpenStruct
 
     def assign_to_me(user_id)
         tasklist   = {}
-        from       = '2014-04-28T00:00:00'
-        to         = '2014-04-28T23:59:59'
+        from       = '2014-04-01T00:00:00'
+        to         = '2014-04-30T23:59:59'
         tasklist[:overdue]    = self.tasklist('assign_to_me', 'overdue', user_id, from, to)
         tasklist[:inprogress] = self.tasklist('assign_to_me', 'inprogress', user_id, from, to)
         tasklist[:completed]  = self.tasklist('assign_to_me', 'completed', user_id, from, to)
