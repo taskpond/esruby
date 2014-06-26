@@ -77,7 +77,7 @@
 						<td style="background-color: #eff2f4; padding: 0 25px 5px;">
 
 							<!-- ASSIGN TO ME -->
-							<%= render 'tasklist', task_title: 'Assign To Me', :response => @assign_to_me  %>
+							<%= render 'tasklist', task_title: 'Assign To Me', response: @assign_to_me, viewall: 'tome'  %>
 						</td>
 					</tr>
 				<% end %>
@@ -89,7 +89,7 @@
 						<td style="background-color: #f0f3f4; padding: 0 25px 5px;">
 
 							<!-- ASSIGN BY ME -->
-							<%= render 'tasklist', task_title: 'Assign By Me', :response => @assign_by_me %>
+							<%= render 'tasklist', task_title: 'Assign By Me', response: @assign_by_me, viewall: 'byme' %>
 						</td>
 					</tr>
 				<% end %>
@@ -101,7 +101,7 @@
 						<td style="background-color: #f0f3f4; padding: 0 25px 5px;">
 
 							<!-- MY TODO -->
-							<%= render 'tasklist', task_title: 'My To-Do', :response => @my_todo %>
+							<%= render 'tasklist', task_title: 'My To-Do', response: @my_todo, viewall: 'todo' %>
 						</td>
 					</tr>
 				<% end %>
@@ -113,7 +113,7 @@
 						<td style="background-color: #f0f3f4; padding: 0 25px 5px;">
 
 							<!-- MY TODO -->
-							<%= render 'tasklist', task_title: 'Following', :response => @following %>
+							<%= render 'tasklist', task_title: 'Following', response: @following, viewall: 'following' %>
 						</td>
 					</tr>
 				<% end %>

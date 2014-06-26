@@ -20,7 +20,10 @@ class Es < OpenStruct
         user_id ||= Es::DUMMYUSER
         @result = self.fetch_data(user_id)
         @assign_to_me = self.assign_to_me(user_id)
-        @data = { result: @result, assign_to_me: @assign_to_me }
+        @assign_by_me = self.assign_by_me(user_id)
+        @my_todo      = self.my_todo(user_id)
+        @following    = self.following(user_id)
+        @data = { result: @result, assign_to_me: @assign_to_me, assign_by_me: @assign_by_me, my_todo: @my_todo, following: @following }
 
         SnapshortNotifier.daily_snapshort('user@example.com', 'Your Daily Snapshot', @data).deliver
     end

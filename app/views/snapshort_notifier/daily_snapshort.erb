@@ -67,7 +67,7 @@
                     <td style="background-color: #eff2f4; padding: 0 25px 5px;">
                         <h2 style="font-size: 14px; font-family: helvetica; color:#3d4955; font-weight: normal;"><b>View your tasks due today</b></h2>
                         <p style="font-size:12px; font-family:Tahoma;color:#3d4955;">
-                            You can customize your selection in <a href="#" style="color:#17a3ce;">Notification Settings</a>.
+                            You can customize your selection in <a href="//taskworld.com/profile#notification" style="color:#17a3ce;">Notification Settings</a>.
                         </p>
                     </td>
                 </tr>
@@ -77,31 +77,43 @@
                         <td style="background-color: #eff2f4; padding: 0 25px 5px;">
 
                             <!-- ASSIGN TO ME -->
-                            <%= render 'snapshorts/assign_to_me' %>
+                            <%= render 'snapshorts/tasklist', task_title: 'Assign To Me', response: @assign_to_me, viewall: 'tome'  %>
                         </td>
                     </tr>
                 <% end %>
                 <!-- -->
 
                 <!-- -->
-                <% if @assign_by_me.present? && !@assign_to_me.blank? %>
+                <% if @assign_by_me.haveTask? %>
                     <tr>
                         <td style="background-color: #f0f3f4; padding: 0 25px 5px;">
 
                             <!-- ASSIGN BY ME -->
-                            <%= render 'snapshorts/assign_by_me', locals: { assign_by_me: @assign_by_me } %>
+                            <%= render 'snapshorts/tasklist', task_title: 'Assign By Me', response: @assign_by_me, viewall: 'byme' %>
                         </td>
                     </tr>
                 <% end %>
                 <!-- -->
 
                 <!-- -->
-                <% if @my_todo.present? && !@my_todo.blank? %>
+                <% if @my_todo.haveTask? %>
                     <tr>
                         <td style="background-color: #f0f3f4; padding: 0 25px 5px;">
 
                             <!-- MY TODO -->
-                            <%= render 'snapshorts/my_todo', locals: { my_todo: @my_todo } %>
+                            <%= render 'snapshorts/tasklist', task_title: 'My To-Do', response: @my_todo, viewall: 'todo' %>
+                        </td>
+                    </tr>
+                <% end %>
+                <!-- -->
+
+                <!-- -->
+                <% if @following.haveTask? %>
+                    <tr>
+                        <td style="background-color: #f0f3f4; padding: 0 25px 5px;">
+
+                            <!-- MY TODO -->
+                            <%= render 'snapshorts/tasklist', task_title: 'Following', response: @following, viewall: 'following' %>
                         </td>
                     </tr>
                 <% end %>
