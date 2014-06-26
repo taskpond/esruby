@@ -488,7 +488,8 @@ class Es < OpenStruct
         end
         query[:query][:filtered][:filter][:bool] = must
         response = @client.search index: Es::INDEX, type: Es::TASKLIST, body: query
-        return Hashie::Mash.new response
+
+        return Hashie::Mash.new(Snapshort.new(response).extend(TasklistRepresenter).to_hash)
     end
 
 end

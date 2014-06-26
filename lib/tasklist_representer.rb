@@ -7,22 +7,27 @@ module TasklistRepresenter
 
     property :took, as: :takeTime
     property :hits do
-        property :total, as: :rows
+        property :total
         collection :hits do
             # property :_id, as: :userId
-            property :_source do
-                property :id, as: :userId
+            property :_source, as: :result do
+                property :id
                 property :assignerId
-                property :assigneerFirstName
+                property :assignerFirstName
                 property :assignerLastName
                 property :assignerFullName
                 property :assignerAvatarPath
+                property :assignerEmail
                 property :assigneeId
                 property :assigneeFirstName
+                property :assigneeLastName
                 property :assigneeFullName
+                property :assigneeAvatarPath
+                property :assigneeEmail
                 property :requestorId
                 property :subject
                 property :commentCount
+                property :estimatedDueDate
                 property :completedDate
                 property :projectId
                 property :projectName
