@@ -25,7 +25,11 @@ class Es < OpenStruct
         @following    = self.following(user_id)
         @data = { result: @result, assign_to_me: @assign_to_me, assign_by_me: @assign_by_me, my_todo: @my_todo, following: @following }
 
-        SnapshortNotifier.daily_snapshort("user@example.com", "Your Daily Snapshot (user_id #{user_id})", @data).deliver
+        if self.having_data?(@data)
+          SnapshortNotifier.daily_snapshort("user@example.com", "Your Daily Snapshot (user_id #{user_id})", @data).deliver
+        else
+          puts "No data!!"
+        end
     end
 
     def fetch_user
@@ -298,9 +302,9 @@ class Es < OpenStruct
             data = {}
             result.aggregations.Assignee.buckets.each do |bucket|
                 # Mont-to-Date
+                data[:overDue], data[:onTime] = 0, 0
                 data[:archievement]   = bucket.Month2Date
                 data[:archievement].HavingDueDate.IsFinishOnTime.buckets.each do |item|
-                    data[:overDue], data[:onTime] = 0, 0
                     if item["key"].downcase == 't'
                         data[:overDue] = item.doc_count
                     elsif item["key"].downcase == 'f'
@@ -493,4 +497,13 @@ class Es < OpenStruct
         return Hashie::Mash.new(Snapshort.new(response).extend(TasklistRepresenter).to_hash)
     end
 
+    def having_data?(data)
+      data         = Hashie::Mash.new data
+      assign_to_me = !data.assign_to_me.overdue.hits.total.zero? && !data.assign_to_me.completed.hits.total.zero? && !data.assign_to_me.inprogress.hits.total.zero?
+      assign_by_me = !data.assign_by_me.overdue.hits.total.zero? && !data.assign_by_me.completed.hits.total.zero? && !data.assign_by_me.inprogress.hits.total.zero?
+      my_todo      = !data.my_todo.overdue.hits.total.zero? && !data.my_todo.completed.hits.total.zero? && !data.my_todo.inprogress.hits.total.zero?
+      following    = !data.following.overdue.hits.total.zero? && !data.following.completed.hits.total.zero? && !data.following.inprogress.hits.total.zero?
+      month2date   = !data.closedTask.blank? && !data.closedTask.zero?
+      return assign_to_me || assign_by_me || my_todo || following || month2date
+    end
 end

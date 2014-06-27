@@ -1,0 +1,24 @@
+production:
+  adapter: sqlserver
+  mode: odbc
+  dsn: production
+  username: tw033dev
+  password: asdqwe123
+  encoding: utf8
+
+development:
+  adapter: sqlserver
+  mode: odbc
+  dsn: development
+  username: tw033dev
+  password: asdqwe123
+  encoding: utf8
+
+test:
+  adapter: sqlserver
+  mode: odbc
+  dsn: test
+  database: test #This must be the real name of the database on the server, not the ODBC DSN! Only required for test.
+  username: tw033dev
+  password: asdqwe123
+  encoding: utf8
