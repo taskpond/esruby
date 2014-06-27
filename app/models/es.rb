@@ -25,7 +25,7 @@ class Es < OpenStruct
         @following    = self.following(user_id)
         @data = { result: @result, assign_to_me: @assign_to_me, assign_by_me: @assign_by_me, my_todo: @my_todo, following: @following }
 
-        SnapshortNotifier.daily_snapshort('user@example.com', 'Your Daily Snapshot', @data).deliver
+        SnapshortNotifier.daily_snapshort("user@example.com", "Your Daily Snapshot (user_id #{user_id})", @data).deliver
     end
 
     def fetch_user
@@ -300,6 +300,7 @@ class Es < OpenStruct
                 # Mont-to-Date
                 data[:archievement]   = bucket.Month2Date
                 data[:archievement].HavingDueDate.IsFinishOnTime.buckets.each do |item|
+                    data[:overDue], data[:onTime] = 0, 0
                     if item["key"].downcase == 't'
                         data[:overDue] = item.doc_count
                     elsif item["key"].downcase == 'f'
@@ -307,7 +308,7 @@ class Es < OpenStruct
                     end
                 end
                 data[:noTargetDate]   = data[:archievement].NoTargetDate.doc_count.blank? ? 0 : data[:archievement].NoTargetDate.doc_count
-                data[:closedTask]     = data[:onTime]+data[:overDue]+data[:noTargetDate]
+                data[:closedTask]     = [data[:onTime],data[:overDue],data[:noTargetDate]].sum
                 data[:startRate]      = data[:archievement].HavingScore.Stats.avg.to_f
                 data[:onTimeCompletion] = data[:closedTask].zero? ? 0 : ((data[:onTime]+data[:overDue])/data[:closedTask])*100
 
