@@ -22,25 +22,23 @@
 						</table>
 					</td>
 				</tr>
-				<% unless @result.closedTask.zero? %>
-					<!-- -->
-					<tr>
-						<td>
-							<h1 style="font-size: 18px; font-family: helvetica; color:#3cbaeb; margin: 30px 0 0 25px; font-weight: normal;"><b>Daily Snapshot</b></h1>
-						</td>
-					</tr>
+				<!-- -->
+				<tr>
+					<td>
+						<h1 style="font-size: 18px; font-family: helvetica; color:#3cbaeb; margin: 30px 0 0 25px; font-weight: normal;"><b>Daily Snapshot</b></h1>
+					</td>
+				</tr>
 
-					<tr>
-						<td style="padding:0 0 0 25px;">
-							<!-- ARCHIEVEMENT -->
-							<%= render 'archievement', locals: { result: @result } %>
-						</td>
-					</tr>
-				<% end %>
+				<tr>
+					<td style="padding:0 0 0 25px;">
+						<!-- ARCHIEVEMENT -->
+						<%= render 'archievement', locals: { result: @result } %>
+					</td>
+				</tr>
 				<!-- -->
 
 				<!-- -->
-				<% if @result.showUpcomingTask %>
+				<% if @result.showUpcomingTask? %>
 					<tr>
 						<td><br />
 							<!-- SCHEDULE -->

@@ -28,7 +28,7 @@ class Es < OpenStruct
         if self.having_data?(@data)
           SnapshortNotifier.daily_snapshort("user@example.com", "Your Daily Snapshot (user_id #{user_id})", @data).deliver
         else
-          puts "No data!!"
+          puts "user: #{user_id} has no data!!"
         end
     end
 
@@ -314,7 +314,8 @@ class Es < OpenStruct
                 data[:noTargetDate]   = data[:archievement].NoTargetDate.doc_count.blank? ? 0 : data[:archievement].NoTargetDate.doc_count
                 data[:closedTask]     = [data[:onTime],data[:overDue],data[:noTargetDate]].sum
                 data[:startRate]      = data[:archievement].HavingScore.Stats.avg.to_f
-                data[:onTimeCompletion] = data[:closedTask].zero? ? 0 : ((data[:onTime]+data[:overDue])/data[:closedTask])*100
+                data[:estimatedDueDateCount] = data[:archievement].HavingDueDate.doc_count
+                data[:onTimeCompletion] = data[:onTime].zero? ? 0 : ((data[:onTime]/data[:estimatedDueDateCount])*100)
 
                 # Upcoming Tasks
                 data[:upcomingTasks] = bucket.UpcomingTasks
@@ -324,7 +325,7 @@ class Es < OpenStruct
                 data[:NextWeek]      = data[:upcomingTasks].NextWeek.doc_count
                 data[:ThisMonth]     = data[:upcomingTasks].ThisMonth.doc_count
                 data[:NextMonth]     = data[:upcomingTasks].NextMonth.doc_count
-                data[:showUpcomingTask] = [data[:Today], data[:Tomorrow], data[:ThisWeek], data[:NextWeek], data[:ThisMonth], data[:NextMonth]].sum
+                data[:showUpcomingTask?] = [data[:Today], data[:Tomorrow], data[:ThisWeek], data[:NextWeek], data[:ThisMonth], data[:NextMonth]].sum
             end
 
             return Hashie::Mash.new data
@@ -499,11 +500,14 @@ class Es < OpenStruct
 
     def having_data?(data)
       data         = Hashie::Mash.new data
-      assign_to_me = !data.assign_to_me.overdue.hits.total.zero? && !data.assign_to_me.completed.hits.total.zero? && !data.assign_to_me.inprogress.hits.total.zero?
-      assign_by_me = !data.assign_by_me.overdue.hits.total.zero? && !data.assign_by_me.completed.hits.total.zero? && !data.assign_by_me.inprogress.hits.total.zero?
-      my_todo      = !data.my_todo.overdue.hits.total.zero? && !data.my_todo.completed.hits.total.zero? && !data.my_todo.inprogress.hits.total.zero?
-      following    = !data.following.overdue.hits.total.zero? && !data.following.completed.hits.total.zero? && !data.following.inprogress.hits.total.zero?
+      assign_to_me = !data.assign_to_me.overdue.hits.total.zero? || !data.assign_to_me.completed.hits.total.zero? || !data.assign_to_me.inprogress.hits.total.zero?
+      assign_by_me = !data.assign_by_me.overdue.hits.total.zero? || !data.assign_by_me.completed.hits.total.zero? || !data.assign_by_me.inprogress.hits.total.zero?
+      my_todo      = !data.my_todo.overdue.hits.total.zero? || !data.my_todo.completed.hits.total.zero? || !data.my_todo.inprogress.hits.total.zero?
+      following    = !data.following.overdue.hits.total.zero? || !data.following.completed.hits.total.zero? || !data.following.inprogress.hits.total.zero?
       month2date   = !data.closedTask.blank? && !data.closedTask.zero?
+      # unless assign_to_me || assign_by_me || my_todo || following || month2date
+      #   byebug
+      # end
       return assign_to_me || assign_by_me || my_todo || following || month2date
     end
 end
