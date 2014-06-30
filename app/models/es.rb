@@ -4,16 +4,25 @@ require 'user_representer'
 require 'mathn'
 
 class Es < OpenStruct
-    INDEX      = 'tw_master'
+    INDEX      = 'tw_staging'
     TASKLIST   = 'tasklist'
     MEMBERLIST = 'memberlist'
     DUMMYUSER  = 537
     FROMDUMMY  = '2014-04-30T23:59:59'.to_datetime
 
     def initialize
+      @sent, @nodata = [], []
+      self.connect_es_server
+    end
+
+    def connect_es_server(server=nil)
+      if server.blank?
+        @client = Elasticsearch::Client.new host: '172.18.1.21:9200', timeout: 1
+        @client.transport.reload_connections!
+        @client.cluster.health
+      elsif server.eql?('qbox')
         @client = Elasticsearch::Client.new url: 'http://es.taskworld.com:80', timeout: 1
-        # @client.transport.reload_connections!
-        # @client.cluster.health
+      end
     end
 
     def daily(user_id)
@@ -27,8 +36,10 @@ class Es < OpenStruct
 
         if self.having_data?(@data)
           SnapshortNotifier.daily_snapshort("user@example.com", "Your Daily Snapshot (user_id #{user_id})", @data).deliver
+          @sent << user_id
         else
-          puts "user: #{user_id} has no data!!"
+          @nodata << user_id
+          Rails.logger.info "user: #{user_id} has no data!!"
         end
     end
 
