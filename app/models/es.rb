@@ -2,9 +2,9 @@ require 'elasticsearch'
 require 'tasklist_representer'
 require 'user_representer'
 require 'mathn'
-
+require 'search'
 class Es < OpenStruct
-    INDEX      = 'tw_dev'
+    INDEX      = 'tw_master'
     TASKLIST   = 'tasklist'
     MEMBERLIST = 'memberlist'
     DUMMYUSER  = 537
@@ -12,7 +12,7 @@ class Es < OpenStruct
 
     def initialize
       @sent, @nodata = [], []
-      self.connect_es_server
+      self.connect_es_server('qbox')
     end
 
     def connect_es_server(server=nil)
@@ -21,7 +21,7 @@ class Es < OpenStruct
         @client.transport.reload_connections!
         @client.cluster.health
       elsif server.eql?('qbox')
-        @client = Elasticsearch::Client.new url: 'http://es.taskworld.com:80', timeout: 1
+        @client = Elasticsearch::Client.new hosts: [ { host: 'stagingec2.taskworld.com', port: '9200', user: 'admin', password: 'P%40ssw0rd4ES' } ]
       end
     end
 
@@ -102,6 +102,11 @@ class Es < OpenStruct
                               from: from,
                               to: to
                             }
+                          }
+                        },
+                        {
+                          term: {
+                            isDeleted: false
                           }
                         }
                       ],
