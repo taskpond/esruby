@@ -4,7 +4,7 @@ require 'user_representer'
 require 'mathn'
 
 class Es < OpenStruct
-    INDEX      = 'tw_staging'
+    INDEX      = 'tw_dev'
     TASKLIST   = 'tasklist'
     MEMBERLIST = 'memberlist'
     DUMMYUSER  = 537
@@ -63,7 +63,7 @@ class Es < OpenStruct
             from = Time.now.at_beginning_of_month.utc
             to = Time.now.utc
 
-            from = '2014-04-01T00:00:00'
+            from = '2010-04-01T00:00:00'
             to = '2014-04-30T00:00:00'
 
             beginning_today      = from.to_datetime.at_beginning_of_day
@@ -98,10 +98,17 @@ class Es < OpenStruct
                         },
                         {
                           range: {
-                            estimatedDueDate: {
+                            targetDate: {
                               from: from,
                               to: to
                             }
+                          }
+                        }
+                      ],
+                      must_not: [
+                        {
+                          term: {
+                            assignerId: user_id
                           }
                         }
                       ]
@@ -121,12 +128,12 @@ class Es < OpenStruct
                           must: [
                             {
                               exists: {
-                                field: "taskStatus"
+                                field: "taskStatusText"
                               }
                             },
                             {
                               term: {
-                                taskStatus: "closed"
+                                taskStatusText: "closed"
                               }
                             }
                           ]
@@ -139,7 +146,7 @@ class Es < OpenStruct
                               must: [
                                 {
                                   exists: {
-                                    field: "estimatedDueDate"
+                                    field: "targetDate"
                                   }
                                 }
                               ]
@@ -160,7 +167,7 @@ class Es < OpenStruct
                               must: [
                                 {
                                   missing: {
-                                    field: "estimatedDueDate"
+                                    field: "targetDate"
                                   }
                                 }
                               ]
@@ -197,7 +204,7 @@ class Es < OpenStruct
                           must: [
                             {
                               exists: {
-                                field: "estimatedDueDate"
+                                field: "targetDate"
                               }
                             }
                           ]
@@ -210,7 +217,7 @@ class Es < OpenStruct
                               must: [
                                 {
                                   range: {
-                                    estimatedDueDate: {
+                                    targetDate: {
                                       from: beginning_today,
                                       to: end_of_day
                                     }
@@ -226,7 +233,7 @@ class Es < OpenStruct
                               must: [
                                 {
                                   range: {
-                                    estimatedDueDate: {
+                                    targetDate: {
                                       from: beginning_tomorrow,
                                       to: end_of_tomorrow
                                     }
@@ -242,7 +249,7 @@ class Es < OpenStruct
                               must: [
                                 {
                                   range: {
-                                    estimatedDueDate: {
+                                    targetDate: {
                                       from: beginning_this_week,
                                       to: end_of_week
                                     }
@@ -258,7 +265,7 @@ class Es < OpenStruct
                               must: [
                                 {
                                   range: {
-                                    estimatedDueDate: {
+                                    targetDate: {
                                       from: beginning_next_week,
                                       to: end_of_next_week
                                     }
@@ -274,7 +281,7 @@ class Es < OpenStruct
                               must: [
                                 {
                                   range: {
-                                    estimatedDueDate: {
+                                    targetDate: {
                                       from: beginning_this_month,
                                       to: end_of_this_month
                                     }
@@ -290,7 +297,7 @@ class Es < OpenStruct
                               must: [
                                 {
                                   range: {
-                                    estimatedDueDate: {
+                                    targetDate: {
                                       from: beginning_next_month,
                                       to: end_of_next_month
                                     }
@@ -325,8 +332,8 @@ class Es < OpenStruct
                 data[:noTargetDate]   = data[:archievement].NoTargetDate.doc_count.blank? ? 0 : data[:archievement].NoTargetDate.doc_count
                 data[:closedTask]     = [data[:onTime],data[:overDue],data[:noTargetDate]].sum
                 data[:startRate]      = data[:archievement].HavingScore.Stats.avg.to_f
-                data[:estimatedDueDateCount] = data[:archievement].HavingDueDate.doc_count
-                data[:onTimeCompletion] = data[:onTime].zero? ? 0 : ((data[:onTime]/data[:estimatedDueDateCount])*100)
+                data[:targetDateCount] = data[:archievement].HavingDueDate.doc_count
+                data[:onTimeCompletion] = data[:onTime].zero? ? 0 : ((data[:onTime]/data[:targetDateCount])*100)
 
                 # Upcoming Tasks
                 data[:upcomingTasks] = bucket.UpcomingTasks
@@ -383,8 +390,8 @@ class Es < OpenStruct
     end
 
     def tasklist(scenario, task_status, user_id, from=nil, to=nil)
-        from  =  from.blank? ? '2014-04-01T00:00:00' : from
-        to    =  to.blank? ? '2014-04-30T23:59:59' : to
+        from  =  from.blank? ? '2010-04-01T00:00:00' : from
+        to    =  to.blank? ? '2014-07-30T23:59:59' : to
         query = {
           size: 10,
           query: {
@@ -396,7 +403,7 @@ class Es < OpenStruct
           },
           sort: [
             {
-              estimatedDueDate: {
+              targetDate: {
                 order: "asc"
               }
             },
@@ -416,7 +423,7 @@ class Es < OpenStruct
                 },
                 {
                   range: {
-                    estimatedDueDate: {
+                    targetDate: {
                       from: from,
                       to: to
                     }
@@ -424,7 +431,7 @@ class Es < OpenStruct
                 },
                 {
                   term: {
-                    taskStatus: task_status
+                    taskStatusText: task_status
                   }
                 }]
             }
@@ -438,7 +445,7 @@ class Es < OpenStruct
                 },
                 {
                   range: {
-                    estimatedDueDate: {
+                    targetDate: {
                       from: from,
                       to: to
                     }
@@ -446,7 +453,7 @@ class Es < OpenStruct
                 },
                 {
                   term: {
-                    taskStatus: task_status
+                    taskStatusText: task_status
                   }
                 }
               ]
@@ -466,7 +473,7 @@ class Es < OpenStruct
                 },
                 {
                   range: {
-                    estimatedDueDate: {
+                    targetDate: {
                       from: from,
                       to: to
                     }
@@ -474,7 +481,7 @@ class Es < OpenStruct
                 },
                 {
                   term: {
-                    taskStatus: task_status
+                    taskStatusText: task_status
                   }
                 }
               ]
@@ -489,7 +496,7 @@ class Es < OpenStruct
                 },
                 {
                   range: {
-                    estimatedDueDate: {
+                    targetDate: {
                       from: from,
                       to: to
                     }
@@ -497,7 +504,7 @@ class Es < OpenStruct
                 },
                 {
                   term: {
-                    taskStatus: task_status
+                    taskStatusText: task_status
                   }
                 }
               ]
@@ -516,9 +523,7 @@ class Es < OpenStruct
       my_todo      = !data.my_todo.overdue.hits.total.zero? || !data.my_todo.completed.hits.total.zero? || !data.my_todo.inprogress.hits.total.zero?
       following    = !data.following.overdue.hits.total.zero? || !data.following.completed.hits.total.zero? || !data.following.inprogress.hits.total.zero?
       month2date   = !data.closedTask.blank? && !data.closedTask.zero?
-      # unless assign_to_me || assign_by_me || my_todo || following || month2date
-      #   byebug
-      # end
+
       return assign_to_me || assign_by_me || my_todo || following || month2date
     end
 end

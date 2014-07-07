@@ -27,7 +27,7 @@ module TasklistRepresenter
                 property :requestorId
                 property :subject
                 property :commentCount
-                property :estimatedDueDate
+                property :targetDate
                 property :completedDate
                 property :projectId
                 property :projectName

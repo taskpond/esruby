@@ -45,7 +45,7 @@
 font-size: 13px; font-family: helvetica;"
 >
 	<% response.overdue.hits.hits.each do |task| %>
-	<% variance_day = distance_of_time_in_words(task.result.estimatedDueDate.to_datetime, @from) %>
+	<% variance_day = distance_of_time_in_words(task.result.targetDate.to_datetime, @from) %>
 	<tr>
 		<td style="padding: 6px 6px 6px 10px;" valign="top">
 			<%= link_to task.result.subject, "//taskworld.com/task#id/#{task.result.id}", style: "text-decoration: none; color:#3d4955" %>
@@ -64,7 +64,7 @@ font-size: 13px; font-family: helvetica;"
 	<% end %>
 
 	<% response.completed.hits.hits.each do |task| %>
-	<% variance_day = distance_of_time_in_words(task.result.estimatedDueDate.to_datetime, task.result.completedDate.to_datetime) %>
+	<% variance_day = distance_of_time_in_words(task.result.targetDate.to_datetime, task.result.completedDate.to_datetime) %>
 	<tr>
 		<td style="padding: 6px 6px 6px 10px;" valign="top">
 			<%= link_to task.result.subject, "//taskworld.com/task#id/#{task.result.id}", style: "text-decoration: none; color:#3d4955" %>
@@ -83,7 +83,7 @@ font-size: 13px; font-family: helvetica;"
 	<% end %>
 
 	<% response.inprogress.hits.hits.each do |task| %>
-	<% variance_day = distance_of_time_in_words(task.result.estimatedDueDate.to_datetime, @from) %>
+	<% variance_day = distance_of_time_in_words(task.result.targetDate.to_datetime, @from) %>
 	<tr>
 		<td style="padding: 6px 6px 6px 10px;" valign="top">
 			<%= link_to task.result.subject, "//taskworld.com/task#id/#{task.result.id}", style: "text-decoration: none; color:#3d4955" %>
